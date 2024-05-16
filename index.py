@@ -1,7 +1,5 @@
 from kink import di
 import tkinter as tk
-import threading
-from time import sleep
 from httpservice import HttpService
 from auth import Auth
 from uicontroller import UiController
@@ -56,6 +54,9 @@ class MainWindow():
     def update_text(self, text: str):
         self.label.config(text=text)
 
+    def execute_after(self, seconds: int, fn):
+        self.root.after(seconds * 1000, fn)
+
 
 if __name__ == '__main__':
     # Create tkinter window reference (loop not started yet)
@@ -67,9 +68,6 @@ if __name__ == '__main__':
 
     # Simulate an UI update awhile after the tkinter window is created
     def authenticate():
-        # Takes slightly longer than 1 second for some reason but that's not the focus...
-        sleep(1)
-
         # DI Demo #1: Auth class' constructor requires HttpService, but not explicitly passed in as a parameter.
         #             An instance of MainWindow is automatically injected into the constructor
         #             of the Auth class by using kink library's @inject decorator (see auth.py)
@@ -80,9 +78,8 @@ if __name__ == '__main__':
         #             Works exactly the same way as the Auth class' usage of HttpService.
         ui_controller = UiController()
         ui_controller.update_ui_text("Authenticated" if authenticated else "Not Authenticated")
-    
-    # Start the thread which will update the UI after some time
-    threading.Thread(target=authenticate).start()
 
+    window.execute_after(1, authenticate)
+    
     # Start the tkinter window
     window.start_mainloop()
