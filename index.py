@@ -7,7 +7,7 @@ from auth import Auth
 from uicontroller import UiController
 
 # Constants
-AUTH_URL = 'http://localhost:5000/authenticated'
+AUTH_URL = 'http://127.0.0.1:5000/authenticated'
 
 class MainWindow():
     """
